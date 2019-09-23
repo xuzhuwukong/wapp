@@ -9,7 +9,7 @@
 <body>
     <h4>{{ rtime }}</h4>
     <container>
-        <form action="http://127.0.0.1:8000/login/" method="post">
+        <form action="{% url 'myLog' %}" method="post">
             {% csrf_token %}
             <div class="form-group form-inline" >
                 <input type="text" class="form-control" placeholder="手机号">
