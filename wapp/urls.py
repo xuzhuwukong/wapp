@@ -22,6 +22,7 @@ urlpatterns = [
     path("timer/", views.timer),
     path("login/", views.login, name="myLog"),
     path('addbook/', views.addbook),
+    path('add/',views.add),
     path('books/', views.books),
     re_path(r'books/(\d+)/delete', views.delbook),  # delbook(request,位置参数)
     re_path(r'books/(\d+)/change', views.changebook),  # delbook(request,位置参数)

@@ -1,7 +1,35 @@
 from django.shortcuts import render, HttpResponse,redirect
 
 # Create your views here.
-from app01.models import Book
+from app01.models import *
+
+def add(request):
+
+    #一对多添加记录
+    #pub_obj = Publish.objects.create(name="人民",email="2@2.com",city="北京")
+    #  绑定出版社
+    #book_obj = Book.objects.create(title="红龙梦",price=100, pub_date="2019-09-16",publish_id=1)
+    #pub_obj = Book.objects.filter(title="红龙梦").first().publish
+    #print(pub_obj)
+
+    # 多对多添加
+    #author_detail = AuthorDetail.objects.create(birthday="1980-01-01",telephone=1388888,addr="beijign")
+    #author = Author.objects.create(name="alex",age=30,authorDetail=author_detail)
+    #author_detail = AuthorDetail.objects.create(birthday="1980-01-01",telephone=1388888,addr="beijign")
+    #author = Author.objects.create(name="andy",age=30,authorDetail=author_detail)
+    alex = Author.objects.get(name="alex")
+    andy = Author.objects.get(name="andy")
+    #book_obj = Book.objects.create(title="西游记", price=100, pub_date="2019-09-16", publish_id=1)
+    #book_obj.author.add(alex,andy)
+
+    book_obj = Book.objects.get(id=8)
+    #book_obj.author.remove(alex)
+    #book_obj.author.clear()
+    #book_obj.author.all()
+    print(book_obj.author.all())
+    ret = book_obj.author.all().values("name")
+    print(ret)
+    return HttpResponse("OK")
 
 # 添加书籍
 def addbook(request):
@@ -50,6 +78,8 @@ def changebook(request, id):
 
 
 def query(request):
+    '''
+
     # 查询老男孩出版社出版过的价格大于200的书籍
     ret = Book.objects.filter(publish="老男孩出版社",price__gt=200)
     print(ret)  # <QuerySet [<Book: Book object (6)>]>
@@ -69,6 +99,38 @@ def query(request):
     # 查询所有人民出版社出版的书籍的价格（从高到低排序，去重）
     ret = Book.objects.filter(publish='人民出版社').values("price").distinct().order_by('-price')
     print(ret)   # <QuerySet [{'price': Decimal('134.00')}, {'price': Decimal('50.00')}]>
+    '''
+    # 基于对象的跨表查询
+    # 翻译的语句是子查询，多条查询
+    # 查询西游记出版社的名字
+    # 一对多查询
+    # 正方向查询：正向查询，关联属性在A表中，通过A查B， 按字段查
+    # book = Book.objects.filter(title="西游记").first()
+    # print(book.publish)
+    # 一对多反向查询 按表名_set, querset
+    #publish = Publish.objects.filter(name="人民").first()
+    #print(publish.book_set.all())
+
+    #多对多查询 book author
+    # 关联属性在author中
+    # 查询西游记作者名称正向查询 book ---》author
+    '''
+    book = Book.objects.filter(title="西游记").first()
+    print(book)
+    author_list = book.author.all()
+    for aut in author_list:
+        print(aut.name)    
+    '''
+
+    # 反向查询   book《-----author
+    # alex作者写的book
+    '''
+    author = Author.objects.filter(name="alex").first()
+    booklist = author.book_set.all()
+    for book in booklist:
+        print(book)
+    '''
+    # 一对一查询 author authordetail 关联在author中
 
     return HttpResponse("OK")
 
