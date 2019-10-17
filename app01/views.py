@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse,redirect
 
 # Create your views here.
+from django.template.context_processors import csrf
 from app01.models import *
 
 def add(request):
@@ -43,8 +44,9 @@ def addbook(request):
         book_obj = Book.objects.create(title=title, price=price,pub_date=date, publish=publish)
         # return HttpResponse("OK")
         return redirect('/books/')   # 添加书籍后重定向
-
-    return render(request, 'addbook.html')
+    publish_list = Publish.objects.all()
+    author_list = Author.objects.all()
+    return render(request, 'addbook.html',{'author_list':author_list,'publish_list':publish_list})
 
 # 查看书籍
 def books(request):
@@ -138,7 +140,7 @@ def query(request):
 import time
 def timer(request):
     rtime = time.time()
-    return render(request, "index.html", {"rtime":rtime})
+    return render(request, "timer.html", {"rtime":rtime})
 
 def login(request):
     rtime = time.asctime( time.localtime(time.time()) )
@@ -147,3 +149,9 @@ def login(request):
     if request.method == "POST":
         print(request.POST)
         return HttpResponse("Ok")
+
+def main_base_view(request):
+#    dictionary = dict(request=request)
+#    dictionary.update(csrf(request))
+    name = "gao"
+    return render(request, 'main/main_base.html', {"name":name})

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="https://nedbatchelder.com/pix/django-icon-256.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+            integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+            crossorigin="anonymous"></script>
+
+
+    {% load staticfiles %}
+
+    <meta charset="UTF-8">
+    <title>DCR DJANGO PROJECTS</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'util/css/style.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+    <style>
+        h2 {
+            color: #7c795d;
+            font-family: 'Trocchi', serif;
+            font-size: 45px;
+            font-weight: normal;
+            line-height: 48px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-toggleable-md navbar-light fixed-top bg-faded" style="background-color: mediumseagreen">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+        </ul>
+        {% if request.user.get_username %}
+            <a title="Permission as: {{ request.user.groups.all.0 }}" class="navbar-brand"
+               style="color:white;">Welcome, {{ request.user.get_username }}</a>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            <!-- <form class="form-inline my-2 my-lg-0">
+                csrf_token
+                <a href="#" style="color: white" class="btn btn-danger my-2 my-sm-0" role="button" data-toggle="modal"
+                   data-target="#support-modal">Tickets</a>
+            </form> &nbsp -->
+
+            <form action="{% url 'logout' %}" method="post" class="form-inline my-2 my-lg-0">
+                {% csrf_token %}
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        {% else %}
+            <form class="form-inline my-2 my-lg-0">
+                {% csrf_token %}
+                <a style="color:white" href="#" class="btn btn-primary my-2 my-sm-0" role="button" data-toggle="modal"
+                   data-target="#login-modal">登录</a>
+            </form>
+			<form class="form-inline my-2 my-lg-0">
+                {% csrf_token %}
+                <a style="color:white" href="#" class="btn btn-primary my-2 my-sm-0" role="button" data-toggle="modal"
+                   data-target="#signup-modal">注册</a>
+            </form>
+        {% endif %}
+    </div>
+
+</nav>
+
+<div style="padding-top: 65px">
+    {% if messages %}
+        {% block messages %}
+            <div class="container-fluid" align="center">
+                <div class="{{ messages.tag }}" id="div_msg" align="center" role="alert"> {{ messages.message }}  </div>
+            </div>
+        {% endblock %}
+    {% endif %}
+
+    {% block body %}
+
+    {% endblock %}
+
+</div>
+<div align="center" class="container" style="padding-top: 5%">
+    {% if request.user.get_username %}
+        <h2 style="width: 50%"  id="header_menu">WELCOME TO THE FIRST VIDEO OF DCR DJANGO PROJECTS</h2>
+        <br><br>
+        {% if request.user.groups.all.0 %}
+    <h1 align="center" id="header_menu"> Permissions: </h1>
+        {{ request.user.groups.all.0 }}
+        {% endif %}
+    {% endif %}
+    {% include "account/login.html" %}
+	{% include "account/signup.html" %}
+    {# include "utility/support.html"   #}
+
+    <nav class="navbar fixed-bottom navbar-light bg-faded">
+        <div class="container" align="center">
+            <span class="text-muted"> © 2017 - Site Built By David Castro Ruiz.  Performed with Django 1.10.5 </span>
+        </div>
+    </nav>
+
+    <script type="text/javascript">
+        setTimeout(function () {
+            $('#div_msg').fadeOut('fast');
+        }, 5000);
+		
+		$('#signup-btn').click(function(){
+			if ($('#signup_password').val() == $('#signup_repassword').val()){
+				alert($('#signup_password').val());
+				$.ajax({
+			        url: "/signup/",
+                    type: 'POST',
+                    data: {email: email},
+                    dataType: 'json',
+			});
+			}
+			else{
+				alert("password error");
+				$('#signup-modal').modal(show);
+			}
+		})
+    </script>
+</body>
+</html>

@@ -20,21 +20,33 @@
         <div class="col-md-6 col-md-offset-3">
             <form action="" method="post">
                 {% csrf_token %}
-                <div>
+                <div class="form-group">
                     <label for="">书籍名称</label>
                     <input type="text" class="form-control" name="title">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="">价格</label>
                     <input type="text" class="form-control" name="price">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="">出版日期</label>
                     <input type="date" class="form-control" name="date">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="">出版社</label>
-                    <input type="text" class="form-control" name="publish">
+                    <select class="form-control" name="publish" id="">
+                        {% for publish in publish_list %}
+                        <option value="{{ publish.pk }}">{{ publish }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="">作者</label>
+                    <select class="form-control" type="text" name="authors" multiple>
+                        {% for author in author_list %}
+                        <option value="{{ author.pk }}">{{ author }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <input type="submit" class="btn btn-success pull-right">
             </form>
